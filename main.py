@@ -52,8 +52,10 @@ if __name__ == "__main__":
                         # Filter the centres that don't have the required amount of doses
                         if session.available_capacity_dose2 >= int(config.get('Filters', 'minimumDose2')) \
                                 and session.available_capacity_dose1 >= int(config.get('Filters', 'minimumDose1')):
+                            
                             # Play the alarm sound and wait for a few seconds
                             pygame.mixer.music.play()
                             time.sleep(float(config.get('Alarm', 'alarmTime')))
+                            
         # Wait for a few seconds before pulling data again
         time.sleep(float(config.get('VaccineInfo', 'retryInSeconds')))
