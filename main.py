@@ -6,6 +6,10 @@ from datetime import date
 import pygame
 import configparser
 
+from requests import ConnectionError
+from requests import Timeout
+from requests import  HTTPError
+
 
 class VaccineInfo:
 
@@ -14,12 +18,20 @@ class VaccineInfo:
 
     # Method to get data for vaccine centers at a given pin-code
     def getVaccineData(self):
-        data = requests.get(
-            config.get('VaccineInfo', 'apiURL') + "?pincode=" + self.pinCode
-            + "&date=" + date.today().strftime("%d-%m-%Y"))
+        retries = 1
+        success = False
+        while not success:
+            try:
+                data = requests.get(
+                    config.get('VaccineInfo', 'apiURL') + "?pincode=" + self.pinCode
+                    + "&date=" + date.today().strftime("%d-%m-%Y"))
 
-        centers = json.loads(data.text, object_hook=lambda d: SimpleNamespace(**d))
-        return centers.centers
+                centers = json.loads(data.text, object_hook=lambda d: SimpleNamespace(**d))
+                return centers.centers
+            except (ConnectionError, Timeout, HTTPError):
+                time.sleep(10)
+                retries += 1
+                print("Retried", str(retries), "times.")
 
 
 if __name__ == "__main__":
