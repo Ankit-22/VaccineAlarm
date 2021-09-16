@@ -8,7 +8,7 @@ import configparser
 
 from requests import ConnectionError
 from requests import Timeout
-from requests import  HTTPError
+from requests import HTTPError
 
 
 class VaccineInfo:
@@ -59,7 +59,7 @@ if __name__ == "__main__":
                     for session in center.sessions:
                         print("Trying", center.name, center.pincode, "for", session.date + ".", "It is",
                               center.fee_type, "and has", session.available_capacity_dose2, "dose2 and",
-                              session.available_capacity_dose1, "dose 1")
+                              session.available_capacity_dose1, "dose1")
 
                         # Filter the centres that don't have the required amount of doses
                         if session.available_capacity_dose2 >= int(config.get('Filters', 'minimumDose2')) \
