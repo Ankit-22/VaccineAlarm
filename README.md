@@ -17,31 +17,39 @@ python main.py
 You can use the `config.ini` to configure the alarm to get notified for your desired doses. Let's see what each config param does:
 
 - pinCodes
-	- This is the list of pin-codes which will be checked for finding vaccine centers
-	- Ex: `pinCodes: ["400067", "400064", "400092", "400101"]`
+    - This is the list of pin-codes which will be checked for finding vaccine centers
+    - Ex: `pinCodes: ["400067", "400064", "400092", "400101"]`
 - feeType
-	- This is the type of dose "Free" or "Paid"
-	- Ex: `feeType: Free`
+    - This is the type of dose "Free" or "Paid"
+    - Ex: `feeType: Free`
 - minimumDose2
-	- This is the minimum amount of dose 2 vaccines available at a given center to be notified.
-	- Keep 0 if dose 2 is not required.
-	- Ex: `minimumDose2: 2`
+    - This is the minimum amount of dose 2 vaccines available at a given center to be notified.
+    - Keep 0 if dose 2 is not required.
+    - Ex: `minimumDose2: 2`
 - minimumDose1
-	- This is the minimum amount of dose 1 vaccines available at a given center to be notified.
-	- Keep 0 if dose 1 is not required.
-	- Ex: `minimumDose1: 4`
+    - This is the minimum amount of dose 1 vaccines available at a given center to be notified.
+    - Keep 0 if dose 1 is not required.
+    - Ex: `minimumDose1: 4`
+- minAge
+    - This is the minimum age of people trying to get vaccinated.
+    - Keep it 100 if you want info for all age groups.
+    - Ex: `minAge: 18`
+- maxAge
+    - This is the maximum age of people trying to get vaccinated.
+    - Keep it 0 if you want info for all age groups.
+    - Ex: `maxAge: 45`
 - alarmFile
-	- This is the audio file that needs to be played as an alarm.
-	- `assets/loud-alarm.ogg` is being played by default
-	- Pygame is used to play the music, and it only supports ogg and wav audio files.
-	- Ex: `alarmFile: assets/loud-alarm.ogg`
+    - This is the audio file that needs to be played as an alarm.
+    - `assets/loud-alarm.ogg` is being played by default
+    - Pygame is used to play the music, and it only supports ogg and wav audio files.
+    - Ex: `alarmFile: assets/loud-alarm.ogg`
 - alarmTime
-	- This is the amount of time in seconds, we need to wait to check next centers while playing the alarm.
-	- Ex: `alarmTime: 4`
+    - This is the amount of time in seconds, we need to wait to check next centers while playing the alarm.
+    - Ex: `alarmTime: 4`
 - apiURL
-	- This is the api url that gets the vaccine data.
-	- This will not be changed generally
-	- Ex: `apiURL: https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin`
+    - This is the api url that gets the vaccine data.
+    - This will not be changed generally
+    - Ex: `apiURL: https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin`
 - retryInSeconds
-	- This is the amount of time in seconds that we need to wait before getting vaccine again.
-	- Ex: `retryInSeconds: 2`
+    - This is the amount of time in seconds that we need to wait before getting vaccine again.
+    - Ex: `retryInSeconds: 2`
