@@ -26,8 +26,8 @@ class VaccineInfo:
                     config.get('VaccineInfo', 'apiURL') + "?pincode=" + self.pinCode
                     + "&date=" + date.today().strftime("%d-%m-%Y"))
 
-                centers = json.loads(data.text, object_hook=lambda d: SimpleNamespace(**d))
-                return centers.centers
+                centers = json.loads(data.text, object_hook=lambda d: vars(SimpleNamespace(**d)))
+                return centers["centers"]
             except (ConnectionError, Timeout, HTTPError):
                 time.sleep(10)
                 retries += 1
@@ -54,29 +54,30 @@ if __name__ == "__main__":
             info = VaccineInfo(pinCode)
 
             # Filter the centres that don't have the required fee type
-            centers = filter(lambda center: center.fee_type == config.get('Filters', 'feeType'),
-                             info.getVaccineData())
+            centers = list(filter(lambda center: center["fee_type"] == config.get('Filters', 'feeType'),
+                             info.getVaccineData()))
             for center in centers:
-                print("Trying", center.name, center.pincode + ".", "It is", center.fee_type)
-                # Filter the sessions that don't have the required amount of doses
-                sessions = filter(lambda session: session.available_capacity_dose2 >=
-                                                  int(config.get('Filters', 'minimumDose2')), center.sessions)
-                sessions = filter(lambda session: session.available_capacity_dose1 >=
-                                                  int(config.get('Filters', 'minimumDose1')), sessions)
+                print("Trying", center["name"], str(center["pincode"]) + ".", "It is", center["fee_type"])
 
                 # Filter the sessions that are not for desired age group
-                sessions = filter(lambda session: session.min_age_limit <=
-                                                  int(config.get('Filters', 'minAge'))
-                                                  if "min_age_limit" in session else False, sessions)
-                sessions = filter(lambda session: session.max_age_limit >=
-                                                  int(config.get('Filters', 'maxAge'))
-                                                  if "max_age_limit" in session else False, sessions)
+                sessions = list(filter(lambda session: (session["min_age_limit"] <=
+                                                        int(config.get('Filters', 'minAge')))
+                if "min_age_limit" in session else False, center["sessions"]))
+                sessions = list(filter(lambda session: (session["max_age_limit"] >=
+                                                        int(config.get('Filters', 'maxAge')))
+                if "max_age_limit" in session else False, sessions))
+
+                # Filter the sessions that don't have the required amount of doses
+                sessions = list(filter(lambda session: session["available_capacity_dose2"] >=
+                                                  int(config.get('Filters', 'minimumDose2')), sessions))
+                sessions = list(filter(lambda session: session["available_capacity_dose1"] >=
+                                                  int(config.get('Filters', 'minimumDose1')), sessions))
 
                 # Print information of each matched center
                 for session in sessions:
-                    print("Trying", center.name, center.pincode, "for", session.date + ".", "It is",
-                          center.fee_type, "and has", session.available_capacity_dose2, "dose2 and",
-                          session.available_capacity_dose1, "dose1")
+                    print("Trying", center["name"], center["pincode"], "for", session["date"] + ".", "It is",
+                          center["fee_type"], "and has", session["available_capacity_dose2"], "dose2 and",
+                          session["available_capacity_dose1"], "dose1")
                     print("Playing Music..")
                     # Play the alarm sound and wait for a few seconds
                     pygame.mixer.music.play()
