@@ -1,6 +1,5 @@
 import json
 import time
-from types import SimpleNamespace
 import requests
 from datetime import date
 import pygame
@@ -26,7 +25,7 @@ class VaccineInfo:
                     config.get('VaccineInfo', 'apiURL') + "?pincode=" + self.pinCode
                     + "&date=" + date.today().strftime("%d-%m-%Y"))
 
-                centers = json.loads(data.text, object_hook=lambda d: vars(SimpleNamespace(**d)))
+                centers = json.loads(data.text)
                 return centers["centers"]
             except (ConnectionError, Timeout, HTTPError):
                 time.sleep(10)
